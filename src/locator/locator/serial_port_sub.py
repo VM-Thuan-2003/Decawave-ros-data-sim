@@ -16,7 +16,7 @@ from visualization_msgs.msg import Marker
 ################################
 Node_name = "serial_sub"
 ################################
-Path_to_log = "src/locator/logging/DWranging.csv"
+Path_to_log = "/home/albert-hypmotion-linux/Desktop/ALBERT/UAV-UWB-ROS2/ros2/src/Decawave-ros-data-sim/src/locator/logging/DWranging.csv"
 print(f"opening {Path_to_log} to append only")
 Dwm_logger = open(Path_to_log, "a+")
 ################################
@@ -25,7 +25,6 @@ Topic = "/output"  # change depending on the actual topic name
 ################################
 # endregion
 subprocess.run(["get", "topic", "info"], shell=True, capture_output=True, text=True)
-
 
 class RangingSub(Node):
     def __init__(self):
@@ -57,11 +56,11 @@ class RangingSub(Node):
             self.get_logger().info('no msg')
         if self.has_msg:
             self.time = datetime.now()
-            self.get_logger().info('subscriber start')
+            # self.get_logger().info('subscriber start')
             write_list = [self.time]
             data = msg.data
             data_list = data.split(' ')
-            self.get_logger().info(f'data_list = {data_list}')
+            # self.get_logger().info(f'data_list = {data_list}')
             good_list = []
             item = 0
             for info in data_list:
@@ -69,7 +68,7 @@ class RangingSub(Node):
                     info = info.replace('\n', '')
                 good_list.append(str(info))
                 item += 1
-            self.get_logger().info(f'good_list = {good_list}')
+            # self.get_logger().info(f'good_list = {good_list}')
             full_list = []
             self.some_list = []
 
@@ -101,13 +100,13 @@ class RangingSub(Node):
                 for i in half_list:
                     if i != 'est':
                         full_list.append(i)
-            self.get_logger().info(f'somelist = {self.some_list}')
+            # self.get_logger().info(f'somelist = {self.some_list}')
             full_list = self.some_list
             real_list = []
             for l_item in full_list:
                 for item in l_item:
                     real_list.append(item)
-            self.get_logger().info(f'real_list = {real_list}')
+            # self.get_logger().info(f'real_list = {real_list}')
             for strng in real_list:
                 write_list.append(strng)
             str_time = str(self.time)
@@ -115,19 +114,19 @@ class RangingSub(Node):
                 vel = -9.9
                 self.get_logger().info('vel = -9.9')
                 self.last_time = str_time
-                self.get_logger().info(f'last_time = {self.last_time}')
+                # self.get_logger().info(f'last_time = {self.last_time}')
             else:
                 x1 = float(real_list[len(real_list)-3])
                 y1 = float(real_list[len(real_list)-2])
                 z1 = float(real_list[len(real_list)-1])
                 calc_list = [x1, y1, z1]
-                self.get_logger().info(f'calc_list = {calc_list}')
+                # self.get_logger().info(f'calc_list = {calc_list}')
 
                 x2 = float(self.last_list[len(self.last_list)-3])
                 y2 = float(self.last_list[len(self.last_list)-2])
                 z2 = float(self.last_list[len(self.last_list)-1])
                 last_list_calc = [x2, y2, z2]
-                self.get_logger().info(f'last_list_calc = {last_list_calc}')
+                # self.get_logger().info(f'last_list_calc = {last_list_calc}')
                 distance = np.sqrt(((x1 - x2)**2)+((y1 - y2)**2)+((z1 - z2)**2))
                 self.get_logger().info(f'distance = {distance}')
 
@@ -149,13 +148,13 @@ class RangingSub(Node):
         self.get_logger().info('subscriber end')
 
     def rviz_pub(self):
-        self.get_logger().info("marker_pub start")
+        # self.get_logger().info("marker_pub start")
         if self.has_msg:
             for item in self.some_list:
-                self.get_logger().info(f"item = {item}")
+                # self.get_logger().info(f"item = {item}")
                 msg = Marker()
                 ts_time = str(self.time.timestamp())
-                self.get_logger().info(f'ts_time = {ts_time}')
+                # self.get_logger().info(f'ts_time = {ts_time}')
                 ts_lis = ts_time.split('.')
                 msg.header.stamp.sec = int(ts_lis[0])
                 msg.header.stamp.nanosec = int(ts_lis[1])
@@ -168,7 +167,7 @@ class RangingSub(Node):
                 msg.pose.position.y = float(item[2])
                 msg.pose.position.z = float(item[3])
                 for anc in self.anchor_list:
-                    self.get_logger().info(f'anc = {anc}')
+                    # self.get_logger().info(f'anc = {anc}')
                     if anc == item[0]:
                         msg.color.r = 1.0
                         msg.color.g = 0.0
@@ -190,7 +189,7 @@ class RangingSub(Node):
                 # self.get_logger().info(f'published {msg}')
             time.sleep(1/30)
         self.has_msg = False
-        self.get_logger().info("marker_pub end")
+        # self.get_logger().info("marker_pub end")
 
 
 def main(args=None):

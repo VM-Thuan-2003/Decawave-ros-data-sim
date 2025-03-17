@@ -3,7 +3,7 @@ import rclpy
 from rclpy.node import Node
 
 #####################################
-node_name = "math_pub"
+node_name = "map_uwb_uav"
 #####################################
 
 
@@ -11,12 +11,12 @@ class RangingPub(Node):
     def __init__(self):
         super().__init__(node_name)
         self.get_logger().info(f"initalised node: {node_name}")
-        self.publish_ = self.create_publisher(String, '/output', 1)
+        self.publish_ = self.create_publisher(String, '/uwb_uav', 1)
         self.create_timer(1, self.publish)
         self.x = 1.423
         self.y = 1.234
         self.z = 0.0
-        self.incre = 0.02
+        self.incre = 0.05
 
     def publish(self):
         while (True):
@@ -28,7 +28,6 @@ class RangingPub(Node):
             self.get_logger().info(f'published: {msg}')
             self.x += self.incre
             self.y += self.incre
-            self.z += self.incre
             self.incre += 0.001
             break
 # 5478[0.50,0.50,1.97]

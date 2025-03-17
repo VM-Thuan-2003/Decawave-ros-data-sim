@@ -7,9 +7,9 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     config = os.path.join(
-        get_package_share_directory("launchers"), "config", "serial_params.yaml"
+        get_package_share_directory("locator"), "config", "serial_params.yaml"
     )
-    my_package_dir = get_package_share_directory("launchers")
+    my_package_dir = get_package_share_directory("locator")
     return LaunchDescription(
         [
             Node(
